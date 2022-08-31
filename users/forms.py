@@ -29,14 +29,14 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class StudentForm(forms.ModelForm):
-    standard = forms.CharField(disabled=True)
-    branch = forms.CharField(disabled=True)
-    division = forms.CharField(disabled=True)
-    roll_no = forms.CharField(disabled=True)
-
     class Meta:
         model = Student
         exclude = ("user",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].disabled = True
 
 
 class StudentRequestForm(forms.ModelForm):
