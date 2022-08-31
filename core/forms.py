@@ -5,7 +5,19 @@ from .models import Exam, Question
 class ExamForm(forms.ModelForm):
     class Meta:
         model = Exam
-        fields = ["name", "duration", "passing_percentage", "active", "show_result"]
+        fields = [
+            "name",
+            "duration",
+            "passing_percentage",
+            "start_time",
+            "end_time",
+            "show_result",
+        ]
+        widgets = {
+            "duration": forms.TimeInput(attrs={"type": "time", "step": 2}),
+            "start_time": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "end_time": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+        }
 
 
 class QuestionForm(forms.ModelForm):

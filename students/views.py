@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, Q
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 from core.decorators import *
 from core.models import Exam, Session
@@ -14,12 +15,12 @@ from core.models import Exam, Session
 def exams_list(request):
     search = request.GET.get("search", None)
     ques = Count("question", filter=Q(question__deleted=None))
+    now = timezone.now()
+    exams = Exam.objects.annotate(ques=ques).filter(
+        ques__gt=0, start_time__lte=now, end_time__gte=now
+    )
     if search:
-        exams = Exam.objects.annotate(ques=ques).filter(
-            ques__gt=0, active=True, name__icontains=search
-        )
-    else:
-        exams = Exam.objects.annotate(ques=ques).filter(ques__gt=0, active=True)
+        exams = exams.filter(name__icontains=search)
 
     paginator = Paginator(exams, 15)
     page = request.GET.get("page")
@@ -38,6 +39,9 @@ def exams_list(request):
 @is_verified_student
 def exam_start(request, pk):
     exam = get_object_or_404(Exam, pk=pk)
+    now = timezone.now()
+    if exam.start_time > now or exam.end_time < now:
+        raise PermissionDenied()
 
     if request.user.session_set.filter(exam=exam, completed=True).exists():
         messages.error(request, "An exam can only be taken once.")
@@ -52,6 +56,7 @@ def exam_start(request, pk):
             student=request.user.student,
             exam=exam,
             seed=random.randrange(10000),
+            end_time=exam.end_time,
         )
 
     return redirect("exam_start", exam_pk=pk)

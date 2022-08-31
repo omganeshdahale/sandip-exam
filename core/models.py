@@ -39,11 +39,12 @@ class Exam(models.Model):
     name = models.CharField(max_length=200, unique=True)
     duration = models.DurationField(
         default=timedelta(hours=1),
-        help_text="In format hh:mm:ss",
         validators=[validate_max_duration, validate_min_duration],
     )
     passing_percentage = models.FloatField(default=0)
-    active = models.BooleanField()
+    active = models.BooleanField(default=False)  # not used. to be removed
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
     show_result = models.BooleanField()
 
     class Meta:
@@ -93,6 +94,7 @@ class Session(models.Model):
     bookmarks = models.ManyToManyField(Question)
     created = models.DateTimeField(auto_now_add=True)
     submitted = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField()  # exam end time when this session was created
 
     class Meta:
         ordering = ("-created",)
@@ -114,7 +116,10 @@ class Session(models.Model):
         return len(self.get_questions())
 
     def get_timeover_timestamp(self):
-        return (self.created + self.exam.duration).timestamp()
+        dt = self.created + self.exam.duration
+        if self.end_time < dt:
+            return self.end_time.timestamp()
+        return dt.timestamp()
 
     @admin.display(description="marks")
     def get_marks(self):
