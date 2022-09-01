@@ -3,7 +3,7 @@ from django.core.validators import MinValueValidator, MinLengthValidator, RegexV
 from django.db import models
 
 
-COLLEGE_CHOICES =(
+COLLEGE_CHOICES = (
     ("SITRC", "Sandip Institute Of Technology And Research Centre"),
     ("SIEM", "Sandip Institute Of Engineering And Management"),
     ("SU", "Sandip University"),
@@ -52,17 +52,14 @@ class Student(models.Model):
         max_length=10,
         validators=[
             MinLengthValidator(10),
-            RegexValidator(
-                regex=r'^\d*$',
-                message='Only digits are allowed.'
-            )
+            RegexValidator(regex=r"^\d*$", message="Only digits are allowed."),
         ],
-        help_text="Without dial code."
+        help_text="Without dial code.",
     )
     college = models.CharField(
         max_length=5,
         choices=COLLEGE_CHOICES,
-        default='SITRC',
+        default="SITRC",
     )
     standard = models.CharField(max_length=2, choices=STANDARD_CHOICES, default="FE")
     branch = models.CharField(max_length=5, choices=BRANCH_CHOICES, default="COMP")
@@ -78,7 +75,6 @@ class Student(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("college", "standard", "branch", "division", "roll_no")
         ordering = ("-created",)
 
     def __str__(self):
@@ -93,17 +89,14 @@ class StudentRequest(models.Model):
         max_length=10,
         validators=[
             MinLengthValidator(10),
-            RegexValidator(
-                regex=r'^\d*$',
-                message='Only digits are allowed.'
-            )
+            RegexValidator(regex=r"^\d*$", message="Only digits are allowed."),
         ],
-        help_text="Without dial code."
+        help_text="Without dial code.",
     )
     college = models.CharField(
         max_length=5,
         choices=COLLEGE_CHOICES,
-        default='SITRC',
+        default="SITRC",
     )
     standard = models.CharField(max_length=2, choices=STANDARD_CHOICES, default="FE")
     branch = models.CharField(max_length=5, choices=BRANCH_CHOICES, default="COMP")

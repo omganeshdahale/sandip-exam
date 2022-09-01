@@ -11,10 +11,12 @@
         <table class="table table-striped table-sm">
             <thead class="thead-light">
                 <tr>
-                    <th scope="col">Student standard</th>
-                    <th scope="col">Student branch</th>
-                    <th scope="col">Student division</th>
-                    <th scope="col">Student roll number</th>
+                    <th scope="col">Student name</th>
+                    <th scope="col">College</th>
+                    <th scope="col">Standard</th>
+                    <th scope="col">Branch</th>
+                    <th scope="col">Division</th>
+                    <th scope="col">Roll number</th>
                     <th scope="col">Attempted questions</th>
                     <th scope="col">Total questions</th>
                     <th scope="col">Marks obtain</th>
@@ -28,6 +30,8 @@
             <tbody id="search-table">
                 {% for session in sessions %}
                     <tr>
+                        <td>{{ session.student.full_name }}</td>
+                        <td>{{ session.student.get_college_display }}</td>
                         <td>{{ session.student.standard }}</td>
                         <td>{{ session.student.get_branch_display }}</td>
                         <td>{{ session.student.division }}</td>

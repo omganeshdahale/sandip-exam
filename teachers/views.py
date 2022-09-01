@@ -107,12 +107,17 @@ def student_request_accept(request, pk):
     ):
         raise PermissionDenied()
 
-    if Student.objects.filter(
-        standard=studentrequest.standard,
-        branch=studentrequest.branch,
-        division=studentrequest.division,
-        roll_no=studentrequest.roll_no,
-    ).exists():
+    if (
+        Student.objects.exclude(user=None)
+        .filter(
+            college=studentrequest.college,
+            standard=studentrequest.standard,
+            branch=studentrequest.branch,
+            division=studentrequest.division,
+            roll_no=studentrequest.roll_no,
+        )
+        .exists()
+    ):
         messages.error(
             request,
             f"Profile with roll number {studentrequest.roll_no} already exists, please delete it first",
@@ -120,6 +125,10 @@ def student_request_accept(request, pk):
     else:
         Student.objects.create(
             user=studentrequest.user,
+            full_name=studentrequest.full_name,
+            email=studentrequest.email,
+            phone=studentrequest.phone,
+            college=studentrequest.college,
             standard=studentrequest.standard,
             branch=studentrequest.branch,
             division=studentrequest.division,
