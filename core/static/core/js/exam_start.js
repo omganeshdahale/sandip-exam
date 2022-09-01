@@ -1,6 +1,8 @@
 jQuery_3_6_0(document).ready(function(){
 
     const $question = jQuery_3_6_0('#question');
+    const $questionImage = jQuery_3_6_0('#js-question-image');
+    const $questionImageContainer = jQuery_3_6_0('#js-question-image-container');
     const $question_num = jQuery_3_6_0('#question-num');
     const $input_q_num = jQuery_3_6_0('input[name=q_num]');
     const $label_option_A = jQuery_3_6_0('label[for=option_A]');
@@ -36,6 +38,13 @@ jQuery_3_6_0(document).ready(function(){
 
     function update_question(data){
         linebreaksbr($question, data.question);
+        if (data.image_url){
+            $questionImageContainer.removeClass('d-none');
+            $questionImage.attr('src', data.image_url);
+        }
+        else {
+            $questionImageContainer.addClass('d-none');
+        }
         $question_num.text(data.q_num);
         $input_q_num.attr('value', data.q_num);
         $label_option_A.text('A) ' + data.option_A);

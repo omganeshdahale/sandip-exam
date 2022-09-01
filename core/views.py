@@ -123,7 +123,7 @@ def question_create(request, exam_pk):
         raise PermissionDenied()
 
     if request.method == "POST":
-        form = QuestionForm(request.POST)
+        form = QuestionForm(request.POST, request.FILES)
         if form.is_valid():
             question = form.save(commit=False)
             question.exam = exam
@@ -147,7 +147,7 @@ def question_edit(request, pk):
         raise PermissionDenied()
 
     if request.method == "POST":
-        form = QuestionForm(request.POST, instance=question)
+        form = QuestionForm(request.POST, request.FILES, instance=question)
         if form.is_valid():
             form.save()
 
@@ -208,6 +208,7 @@ def exam_start(request, exam_pk):
                 "prev_q_num": prev_q_num,
                 "next_q_num": next_q_num,
                 "question": question.question,
+                "image_url": question.image.url if question.image else None,
                 "option_A": question.option_A,
                 "option_B": question.option_B,
                 "option_C": question.option_C,

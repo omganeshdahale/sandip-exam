@@ -69,6 +69,7 @@ class Question(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     question = models.TextField(max_length=1000)
+    image = models.ImageField(upload_to="question_images/", null=True, blank=True)
     option_A = models.CharField(max_length=200)
     option_B = models.CharField(max_length=200)
     option_C = models.CharField(max_length=200)

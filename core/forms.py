@@ -25,6 +25,7 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = [
             "question",
+            "image",
             "correct_answer",
             "option_A",
             "option_B",
