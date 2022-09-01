@@ -13,5 +13,10 @@ urlpatterns = [
         name="student_request_accept",
     ),
     path("exams/<int:exam_pk>/results/", result_list, name="result_list"),
+    path(
+        "exams/<int:exam_pk>/results/export/",
+        result_list_export_excel,
+        name="result_list_export_excel",
+    ),
     path("results/<int:pk>/", result_detail, name="result_detail"),
 ]

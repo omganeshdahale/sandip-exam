@@ -1,9 +1,12 @@
+import io
+import xlwt
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from django.http import FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from core.decorators import *
@@ -162,6 +165,53 @@ def result_list(request, exam_pk):
         "sessions": sessions,
     }
     return render(request, "teachers/result_list.html", context)
+
+
+@login_required
+@is_verified_teacher
+def result_list_export_excel(request, exam_pk):
+    exam = get_object_or_404(Exam, pk=exam_pk)
+    if exam.user != request.user:
+        raise PermissionDenied()
+    sessions = exam.session_set.filter(completed=True).select_related("student", "exam")
+
+    workbook = xlwt.Workbook()
+    worksheet = workbook.add_sheet("Results")
+    worksheet.write(0, 0, "STUDENT NAME")
+    worksheet.write(0, 1, "COLLEGE")
+    worksheet.write(0, 2, "STANDARD")
+    worksheet.write(0, 3, "BRANCH")
+    worksheet.write(0, 4, "DIVISION")
+    worksheet.write(0, 5, "ROLL NO")
+    worksheet.write(0, 6, "ATTEMPTED QUESTIONS")
+    worksheet.write(0, 7, "TOTAL QUESTIONS")
+    worksheet.write(0, 8, "MARKS OBTAIN")
+    worksheet.write(0, 9, "MAX MARKS")
+    worksheet.write(0, 10, "PASSING PERCENTAGE")
+    worksheet.write(0, 11, "PASSING STATUS")
+    worksheet.write(0, 12, "SUBMITTED ON")
+
+    for row, session in enumerate(sessions, start=1):
+        worksheet.write(row, 0, session.student.full_name)
+        worksheet.write(row, 1, session.student.get_college_display())
+        worksheet.write(row, 2, session.student.standard)
+        worksheet.write(row, 3, session.student.get_branch_display())
+        worksheet.write(row, 4, session.student.division)
+        worksheet.write(row, 5, session.student.roll_no)
+        worksheet.write(row, 6, session.get_num_attempted_que())
+        worksheet.write(row, 7, session.get_num_total_que())
+        worksheet.write(row, 8, session.get_marks())
+        worksheet.write(row, 9, session.get_max_marks())
+        worksheet.write(row, 10, session.exam.passing_percentage)
+        passing_status = session.get_passing_status()
+        passing_status = "PASS" if passing_status else "FAIL"
+        worksheet.write(row, 11, passing_status)
+        worksheet.write(row, 12, session.submitted.strftime("%m/%d/%Y"))
+
+    buffer = io.BytesIO()
+    workbook.save(buffer)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename="report.xlsx")
 
 
 @login_required
