@@ -63,8 +63,7 @@ class Student(models.Model):
     )
     standard = models.CharField(max_length=2, choices=STANDARD_CHOICES, default="FE")
     branch = models.CharField(max_length=5, choices=BRANCH_CHOICES, default="COMP")
-    division = models.CharField(max_length=1, choices=DIVISION_CHOICES, default="A")
-    roll_no = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    prn = models.CharField(max_length=20)
     # dob = DateField("Date of Birth")
     # sex = models.CharField(
     #     max_length=1,
@@ -78,7 +77,7 @@ class Student(models.Model):
         ordering = ("-created",)
 
     def __str__(self):
-        return f"{self.standard} {self.branch} {self.division} {self.roll_no}"
+        return f"{self.get_college_display()} - {self.get_standard_display()} - {self.get_branch_display()}"
 
 
 class StudentRequest(models.Model):
@@ -100,8 +99,7 @@ class StudentRequest(models.Model):
     )
     standard = models.CharField(max_length=2, choices=STANDARD_CHOICES, default="FE")
     branch = models.CharField(max_length=5, choices=BRANCH_CHOICES, default="COMP")
-    division = models.CharField(max_length=1, choices=DIVISION_CHOICES, default="A")
-    roll_no = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    prn = models.CharField(max_length=20)
     # dob = DateField("Date of Birth")
     # sex = models.CharField(
     #     max_length=1,
@@ -116,29 +114,36 @@ class StudentRequest(models.Model):
         ordering = ("-created",)
 
     def __str__(self):
-        return f"{self.standard} {self.branch} {self.division} {self.roll_no}"
+        return f"{self.get_college_display()} - {self.get_standard_display()} - {self.get_branch_display()}"
 
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    college = models.CharField(
+        max_length=5,
+        choices=COLLEGE_CHOICES,
+        default="SITRC",
+    )
     standard = models.CharField(max_length=2, choices=STANDARD_CHOICES, default="FE")
     branch = models.CharField(max_length=5, choices=BRANCH_CHOICES, default="COMP")
-    division = models.CharField(max_length=1, choices=DIVISION_CHOICES, default="A")
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("standard", "branch", "division")
         ordering = ("-created",)
 
     def __str__(self):
-        return f"{self.standard} {self.branch} {self.division}"
+        return f"{self.get_college_display()} - {self.get_standard_display()} - {self.get_branch_display()}"
 
 
 class TeacherRequest(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    college = models.CharField(
+        max_length=5,
+        choices=COLLEGE_CHOICES,
+        default="SITRC",
+    )
     standard = models.CharField(max_length=2, choices=STANDARD_CHOICES, default="FE")
     branch = models.CharField(max_length=5, choices=BRANCH_CHOICES, default="COMP")
-    division = models.CharField(max_length=1, choices=DIVISION_CHOICES, default="A")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -146,4 +151,4 @@ class TeacherRequest(models.Model):
         ordering = ("-created",)
 
     def __str__(self):
-        return f"{self.standard} {self.branch} {self.division}"
+        return f"{self.get_college_display()} - {self.get_standard_display()} - {self.get_branch_display()}"
