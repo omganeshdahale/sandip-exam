@@ -11,13 +11,19 @@ ACCOUNT_TYPE_CHOICES = (
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
-    account_type = forms.ChoiceField(
-        choices=ACCOUNT_TYPE_CHOICES, widget=forms.RadioSelect()
-    )
+    # account_type = forms.ChoiceField(
+    #     choices=ACCOUNT_TYPE_CHOICES, widget=forms.RadioSelect()
+    # )
 
     class Meta:
         model = User
-        fields = ("account_type", "username", "email", "password1", "password2")
+        fields = (
+            # "account_type",
+            "username",
+            "email",
+            "password1",
+            "password2"
+        )
 
 
 class UserUpdateForm(forms.ModelForm):

@@ -13,11 +13,14 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            account_type = form.cleaned_data.get("account_type")
-            if account_type == "S":
-                user.is_student = True
-            else:
-                user.is_teacher = True
+            user.is_student = True
+
+            # account_type = form.cleaned_data.get("account_type")
+            # if account_type == "S":
+            #     user.is_student = True
+            # else:
+            #     user.is_teacher = True
+
             user.save()
 
             messages.success(
