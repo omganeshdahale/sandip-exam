@@ -9,7 +9,11 @@
             <hr>
             <table>
                 <tr>
-                    <td class="w-50" valign="top">Exam:</td>
+                    <td class="w-50" valign="top">Exam ID:</td>
+                    <td>{{ session.exam.id }}</td>
+                </tr>
+                <tr>
+                    <td valign="top">Exam:</td>
                     <td>{{ session.exam }}</td>
                 </tr>
                 <tr>
@@ -17,27 +21,27 @@
                     <td>{{ session.exam.duration }}</td>
                 </tr>
                 <tr>
-                    <td valign="top">Max marks:</td>
-                    <td>{{ session.exam.get_max_marks }}</td>
+                    <td valign="top">Attempted questions:</td>
+                    <td>{{ session.get_num_attempted_que }}</td>
                 </tr>
                 <tr>
-                    <td valign="top">Questions:</td>
+                    <td valign="top">Total questions:</td>
                     <td>{{ session.get_num_total_que }}</td>
                 </tr>
                 <tr>
-                    <td valign="top">Student ID:</td>
-                    <td>{{ session.user }}</td>
+                    <td valign="top">PRN:</td>
+                    <td>{{ session.student.prn }}</td>
                 </tr>
                 <tr>
                     <td valign="top">Exam state:</td>
                     <td>completed</td>
                 </tr>
                 <tr>
-                    <td valign="top">Start time:</td>
+                    <td valign="top">Started on:</td>
                     <td>{{ session.created }}</td>
                 </tr>
                 <tr>
-                    <td valign="top">End time:</td>
+                    <td valign="top">Submitted on:</td>
                     <td>{{ session.submitted }}</td>
                 </tr>
             </table>
