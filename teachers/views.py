@@ -125,6 +125,7 @@ def result_list(request, exam_pk):
     if exam.user != request.user:
         raise PermissionDenied()
     sessions = exam.session_set.filter(completed=True)
+    active_sessions = exam.session_set.filter(completed=False).count()
 
     paginator = Paginator(sessions, 15)
     page = request.GET.get("page")
@@ -138,6 +139,7 @@ def result_list(request, exam_pk):
     context = {
         "exam": exam,
         "sessions": sessions,
+        "active_sessions": active_sessions,
     }
     return render(request, "teachers/result_list.html", context)
 

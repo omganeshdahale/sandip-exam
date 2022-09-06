@@ -9,6 +9,9 @@
     <a href="{% url 'teachers:result_list_export_excel' exam.pk %}" class="btn btn-success px-3 mb-3 float-right">
         <i class="fas fa-file-excel"></i> Export to Excel
     </a>
+    <span class="{% if active_sessions %}text-success{% else %}text-danger{% endif %} font-weight-bold float-right mr-3">
+        {{ active_sessions }} Active session{{ active_sessions|pluralize }}
+    </span>
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-sm">
