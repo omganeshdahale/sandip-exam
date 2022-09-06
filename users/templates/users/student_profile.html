@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
     {% if user.student %}
@@ -41,4 +42,5 @@
             {% endif %}
         </div>
     </div>
+    <script type="text/javascript" src="{% static 'js/uppercase_only.js' %}"></script>
 {% endblock content %}

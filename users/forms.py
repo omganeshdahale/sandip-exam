@@ -50,6 +50,10 @@ class StudentRequestForm(forms.ModelForm):
         model = StudentRequest
         exclude = ("user",)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["prn"].widget.attrs["class"] = "js-uppercase-only"
+
 
 class TeacherForm(forms.ModelForm):
     class Meta:
