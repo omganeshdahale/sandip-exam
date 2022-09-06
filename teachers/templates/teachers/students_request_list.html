@@ -2,8 +2,8 @@
 {% load static %}
 {% block content %}
     
-    <h2 class="font-weight-bold">Students' profile requests</h2>
-    <p>{{ user.teacher.standard }} {{ user.teacher.get_branch_display }} {{ user.teacher.division }}</p>
+    <h2 class="font-weight-bold">Students' Profile Requests</h2>
+    <p>{{ user.teacher.get_college_display }} - {{ user.teacher.get_branch_display }}</p>
 
     <form>
     <div class="input-group my-3">
@@ -17,14 +17,15 @@
   </form>
 
     <div class="table-responsive">
-        <table class="table table-striped table-sm">
+        <table class="table table-bordered table-striped table-sm">
             <thead class="thead-light">
                 <tr>
-                    <th scope="col">User ID</th>
                     <th scope="col">Request ID</th>
-                    <th scope="col">Username</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Email</th>
-                    <th scope="col">Roll number</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Standard</th>
+                    <th scope="col">PRN</th>
                     <th scope="col">Updated on</th>
                     <th scope="col">Created on</th>
                     <th scope="col"></th>
@@ -33,11 +34,12 @@
             <tbody id="search-table">
                 {% for student in students %}
                     <tr>
-                        <td>{{ student.id }}</td>
                         <td>{{ student.studentrequest.id }}</td>
-                        <td>{{ student }}</td>
-                        <td>{{ student.email }}</td>
-                        <td>{{ student.studentrequest.roll_no }}</td>
+                        <td>{{ student.studentrequest.full_name }}</td>
+                        <td>{{ student.studentrequest.email }}</td>
+                        <td>{{ student.studentrequest.phone }}</td>
+                        <td>{{ student.studentrequest.get_standard_display }}</td>
+                        <td>{{ student.studentrequest.prn }}</td>
                         <td>{{ student.studentrequest.updated|date:"M d, Y" }}</td>
                         <td>{{ student.studentrequest.created|date:"M d, Y" }}</td>
                         <td>

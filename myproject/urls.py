@@ -61,7 +61,7 @@ urlpatterns = [
     ),
     path("accounts/", include("users.urls", namespace="users")),
     path("teachers/", include("teachers.urls", namespace="teachers")),
-    path("hod/", include("hod.urls", namespace="hod")),
+    # path("hod/", include("hod.urls", namespace="hod")),
     path("students/", include("students.urls", namespace="students")),
     path("", include("core.urls")),
 ]

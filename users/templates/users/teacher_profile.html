@@ -32,13 +32,6 @@
                     </div>
                 {% endif %}
             </form>
-
-            {% if user.teacher %}
-                <form method="POST" action="{% url 'users:teacher_delete' %}">
-                    {% csrf_token %}
-                    <button class="btn btn-danger btn-block"><i class="fas fa-trash-alt"></i> Delete</button>
-                </form>
-            {% endif %}
         </div>
     </div>
 {% endblock content %}

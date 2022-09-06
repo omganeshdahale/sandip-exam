@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from core.decorators import *
 from .forms import *
 from .models import User
 
@@ -87,30 +88,10 @@ def student_delete(request):
 
 
 @login_required
+@is_verified_teacher
 def teacher_profile(request):
     user = request.user
-    if hasattr(user, "teacher"):
-        form = TeacherForm(instance=user.teacher)
-
-    elif request.method == "POST":
-        if hasattr(user, "teacherrequest"):
-            form = TeacherRequestForm(request.POST, instance=user.teacherrequest)
-        else:
-            form = TeacherRequestForm(request.POST)
-
-        if form.is_valid():
-            tr = form.save(commit=False)
-            tr.user = user
-            tr.save()
-
-            messages.success(request, "Profile updated successfully.")
-            return redirect("users:teacher_profile")
-    else:
-        if hasattr(user, "teacherrequest"):
-            form = TeacherRequestForm(instance=user.teacherrequest)
-        else:
-            form = TeacherRequestForm()
-
+    form = TeacherForm(instance=user.teacher)
     return render(request, "users/teacher_profile.html", {"form": form})
 
 

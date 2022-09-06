@@ -124,7 +124,6 @@ class Teacher(models.Model):
         choices=COLLEGE_CHOICES,
         default="SITRC",
     )
-    standard = models.CharField(max_length=2, choices=STANDARD_CHOICES, default="FE")
     branch = models.CharField(max_length=5, choices=BRANCH_CHOICES, default="COMP")
     created = models.DateTimeField(auto_now_add=True)
 
@@ -132,7 +131,7 @@ class Teacher(models.Model):
         ordering = ("-created",)
 
     def __str__(self):
-        return f"{self.get_college_display()} - {self.get_standard_display()} - {self.get_branch_display()}"
+        return f"{self.get_college_display()} - {self.get_branch_display()}"
 
 
 class TeacherRequest(models.Model):
@@ -142,7 +141,6 @@ class TeacherRequest(models.Model):
         choices=COLLEGE_CHOICES,
         default="SITRC",
     )
-    standard = models.CharField(max_length=2, choices=STANDARD_CHOICES, default="FE")
     branch = models.CharField(max_length=5, choices=BRANCH_CHOICES, default="COMP")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -151,4 +149,4 @@ class TeacherRequest(models.Model):
         ordering = ("-created",)
 
     def __str__(self):
-        return f"{self.get_college_display()} - {self.get_standard_display()} - {self.get_branch_display()}"
+        return f"{self.get_college_display()} - {self.get_branch_display()}"

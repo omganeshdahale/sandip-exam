@@ -21,18 +21,12 @@ User = get_user_model()
 def students_list(request):
     teacher = request.user.teacher
     search = request.GET.get("search", None)
+    students = User.objects.filter(
+        student__college=teacher.college,
+        student__branch=teacher.branch,
+    )
     if search:
-        students = User.objects.filter(
-            student__standard=teacher.standard,
-            student__branch=teacher.branch,
-            student__division=teacher.division,
-        ).filter(Q(username__icontains=search) | Q(email__icontains=search))
-    else:
-        students = User.objects.filter(
-            student__standard=teacher.standard,
-            student__branch=teacher.branch,
-            student__division=teacher.division,
-        )
+        students = students.filter(Q(username__icontains=search) | Q(email__icontains=search))
 
     paginator = Paginator(students, 15)
     page = request.GET.get("page")
@@ -53,9 +47,8 @@ def student_delete(request, pk):
     student = get_object_or_404(Student, pk=pk)
     teacher = request.user.teacher
     if (
-        student.standard != teacher.standard
+        student.college != teacher.college
         or student.branch != teacher.branch
-        or student.division != teacher.division
     ):
         raise PermissionDenied()
 
@@ -70,18 +63,12 @@ def student_delete(request, pk):
 def students_request_list(request):
     teacher = request.user.teacher
     search = request.GET.get("search", None)
+    students = User.objects.filter(
+        studentrequest__college=teacher.college,
+        studentrequest__branch=teacher.branch,
+    )
     if search:
-        students = User.objects.filter(
-            studentrequest__standard=teacher.standard,
-            studentrequest__branch=teacher.branch,
-            studentrequest__division=teacher.division,
-        ).filter(Q(username__icontains=search) | Q(email__icontains=search))
-    else:
-        students = User.objects.filter(
-            studentrequest__standard=teacher.standard,
-            studentrequest__branch=teacher.branch,
-            studentrequest__division=teacher.division,
-        )
+        students = students.filter(Q(username__icontains=search) | Q(email__icontains=search))
 
     paginator = Paginator(students, 15)
     page = request.GET.get("page")
@@ -104,26 +91,15 @@ def student_request_accept(request, pk):
     studentrequest = get_object_or_404(StudentRequest, pk=pk)
     teacher = request.user.teacher
     if (
-        studentrequest.standard != teacher.standard
+        studentrequest.college != teacher.college
         or studentrequest.branch != teacher.branch
-        or studentrequest.division != teacher.division
     ):
         raise PermissionDenied()
 
-    if (
-        Student.objects.exclude(user=None)
-        .filter(
-            college=studentrequest.college,
-            standard=studentrequest.standard,
-            branch=studentrequest.branch,
-            division=studentrequest.division,
-            roll_no=studentrequest.roll_no,
-        )
-        .exists()
-    ):
+    if Student.objects.exclude(user=None).filter(prn=studentrequest.prn).exists():
         messages.error(
             request,
-            f"Profile with roll number {studentrequest.roll_no} already exists, please delete it first",
+            f"Profile with PRN {studentrequest.prn} already exists, please delete it first",
         )
     else:
         Student.objects.create(
@@ -134,8 +110,7 @@ def student_request_accept(request, pk):
             college=studentrequest.college,
             standard=studentrequest.standard,
             branch=studentrequest.branch,
-            division=studentrequest.division,
-            roll_no=studentrequest.roll_no,
+            prn=studentrequest.prn,
         )
         studentrequest.delete()
         messages.success(request, "Profile request accepted")
@@ -177,36 +152,34 @@ def result_list_export_excel(request, exam_pk):
 
     workbook = xlwt.Workbook()
     worksheet = workbook.add_sheet("Results")
-    worksheet.write(0, 0, "STUDENT NAME")
-    worksheet.write(0, 1, "COLLEGE")
-    worksheet.write(0, 2, "STANDARD")
-    worksheet.write(0, 3, "BRANCH")
-    worksheet.write(0, 4, "DIVISION")
-    worksheet.write(0, 5, "ROLL NO")
-    worksheet.write(0, 6, "ATTEMPTED QUESTIONS")
-    worksheet.write(0, 7, "TOTAL QUESTIONS")
-    worksheet.write(0, 8, "MARKS OBTAIN")
-    worksheet.write(0, 9, "MAX MARKS")
-    worksheet.write(0, 10, "PASSING PERCENTAGE")
-    worksheet.write(0, 11, "PASSING STATUS")
-    worksheet.write(0, 12, "SUBMITTED ON")
+    worksheet.write(0, 0, "PRN")
+    worksheet.write(0, 1, "STUDENT NAME")
+    worksheet.write(0, 2, "COLLEGE")
+    worksheet.write(0, 3, "STANDARD")
+    worksheet.write(0, 4, "BRANCH")
+    worksheet.write(0, 5, "ATTEMPTED QUESTIONS")
+    worksheet.write(0, 6, "TOTAL QUESTIONS")
+    worksheet.write(0, 7, "MARKS OBTAIN")
+    worksheet.write(0, 8, "MAX MARKS")
+    worksheet.write(0, 9, "PASSING PERCENTAGE")
+    worksheet.write(0, 10, "PASSING STATUS")
+    worksheet.write(0, 11, "SUBMITTED ON")
 
     for row, session in enumerate(sessions, start=1):
-        worksheet.write(row, 0, session.student.full_name)
-        worksheet.write(row, 1, session.student.get_college_display())
-        worksheet.write(row, 2, session.student.standard)
-        worksheet.write(row, 3, session.student.get_branch_display())
-        worksheet.write(row, 4, session.student.division)
-        worksheet.write(row, 5, session.student.roll_no)
-        worksheet.write(row, 6, session.get_num_attempted_que())
-        worksheet.write(row, 7, session.get_num_total_que())
-        worksheet.write(row, 8, session.get_marks())
-        worksheet.write(row, 9, session.get_max_marks())
-        worksheet.write(row, 10, session.exam.passing_percentage)
+        worksheet.write(row, 0, session.student.prn)
+        worksheet.write(row, 1, session.student.full_name)
+        worksheet.write(row, 2, session.student.get_college_display())
+        worksheet.write(row, 3, session.student.get_standard_display())
+        worksheet.write(row, 4, session.student.get_branch_display())
+        worksheet.write(row, 5, session.get_num_attempted_que())
+        worksheet.write(row, 6, session.get_num_total_que())
+        worksheet.write(row, 7, session.get_marks())
+        worksheet.write(row, 8, session.get_max_marks())
+        worksheet.write(row, 9, session.exam.passing_percentage)
         passing_status = session.get_passing_status()
         passing_status = "PASS" if passing_status else "FAIL"
-        worksheet.write(row, 11, passing_status)
-        worksheet.write(row, 12, session.submitted.strftime("%m/%d/%Y"))
+        worksheet.write(row, 10, passing_status)
+        worksheet.write(row, 11, session.submitted.strftime("%m/%d/%Y"))
 
     buffer = io.BytesIO()
     workbook.save(buffer)

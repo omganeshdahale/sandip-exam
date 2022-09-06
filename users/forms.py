@@ -52,13 +52,14 @@ class StudentRequestForm(forms.ModelForm):
 
 
 class TeacherForm(forms.ModelForm):
-    standard = forms.CharField(disabled=True)
-    branch = forms.CharField(disabled=True)
-    division = forms.CharField(disabled=True)
-
     class Meta:
         model = Teacher
         exclude = ("user",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].disabled = True
 
 
 class TeacherRequestForm(forms.ModelForm):
