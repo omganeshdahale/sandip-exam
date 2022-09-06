@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Exam, Session
+from .models import Exam, Session, Question, Answer
+
+
+class QuestionAdmin(admin.StackedInline):
+    model = Question
+    extra = 1
+
 
 class ExamAdmin(admin.ModelAdmin):
     list_display = (
@@ -14,6 +20,12 @@ class ExamAdmin(admin.ModelAdmin):
     )
     list_filter = ('active', 'created')
     search_fields = ('name', 'user__username')
+    inlines = (QuestionAdmin,)
+
+
+class AnswerAdmin(admin.StackedInline):
+    model = Answer
+    extra = 1
 
 
 class SessionAdmin(admin.ModelAdmin):
@@ -32,6 +44,7 @@ class SessionAdmin(admin.ModelAdmin):
     )
     list_filter = ('completed', 'created', 'submitted')
     search_fields = ('exam__name', 'user__username')
+    inlines = (AnswerAdmin,)
 
 
 admin.site.register(Exam, ExamAdmin)
