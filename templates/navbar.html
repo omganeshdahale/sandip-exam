@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse" id="navbar-links">
             <ul class="navbar-nav  ml-auto">
                 {% if user.is_authenticated %}
-                    {% if user.is_student %}
+                    {% if user.is_verified_student %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'students:exams_list' %}">Active exams</a>
                         </li>

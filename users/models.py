@@ -43,6 +43,9 @@ class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
     is_hod = models.BooleanField(default=False)
 
+    def is_verified_student(self):
+        return hasattr(self, "student")
+
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
