@@ -1,8 +1,12 @@
+{% load static %}
 {% load my_extras %}
 <nav class="navbar navbar-expand-md bg-dark navbar-dark sticky-top mb-4">
     <div class="container">
         <!-- Brand -->
-        <a class="navbar-brand font-weight-bold" href="#">Online Examination System</a>
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'img/WhiteTiger.png' %}" height="30" alt="">
+            Online Examination System
+        </a>
 
         <!-- Toggler Button -->
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbar-links">

@@ -1,6 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
+    <div class="mx-auto max-width-650 text-center my-5">
+        <img src="{% static 'img/foundation_inline.png' %}" height="80" alt="" class="mx-1 mb-3">
+        <img src="{% static 'img/university_inline.jpg' %}" height="80" alt="" class="mx-1 mb-3">
+    </div>
+
     <div class="card mx-auto max-width-650">
         <div class="card-body">
             <form method="POST">

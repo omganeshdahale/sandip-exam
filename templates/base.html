@@ -28,6 +28,7 @@
             }*/
         </style>
 
+        <link rel="icon" href="{% static 'img/logo.png' %}">
         <title>{% block title%}Online Examination System{% endblock title%}</title>
         {% block head %}{% endblock head %}
     </head>
@@ -49,7 +50,7 @@
         {% block content %}{% endblock content %}
         </div>
 
-        {% block footer %}{% endblock footer %}
+        {% block footer %}{% include "footer.html" %}{% endblock footer %}
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
