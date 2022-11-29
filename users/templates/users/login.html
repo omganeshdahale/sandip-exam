@@ -22,10 +22,12 @@
                     </small>
                 </div>
             </form>
+            {% comment %}
             <form method="POST" action="{% url 'users:demo_login' %}">
                 {% csrf_token %}
                 <button class="btn btn-block btn-dark">Demo login</button>
             </form>
+            {% endcomment %}
             <div class="border-top pt-3">
                 <small class="text-muted">
                     Need an account?
