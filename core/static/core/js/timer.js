@@ -1,5 +1,6 @@
 jQuery_3_6_0(document).ready(function(){
 
+    const submit_form = document.getElementById('submit-form');
     const $submit_btn = jQuery_3_6_0('#submit-btn');
     const $timer = jQuery_3_6_0('#timer');
     const duration = $timer.attr('data-duration');
@@ -19,7 +20,7 @@ jQuery_3_6_0(document).ready(function(){
 
         if (diff <= 0){
             //clearInterval(handle);
-            $submit_btn.click();
+            submit_form.submit();
             return;
         }
         else if (diff <= duration/100 *10){
